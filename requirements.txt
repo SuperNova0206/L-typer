@@ -1,8 +1,14 @@
 annotated-doc==0.0.4
+ast_serialize==0.6.0
 colorama==0.4.6
+librt==0.13.0
 markdown-it-py==4.2.0
 mdurl==0.1.2
+mypy==2.2.0
+mypy_extensions==1.1.0
+pathspec==1.1.1
 Pygments==2.20.0
 rich==15.0.0
 shellingham==1.5.4
 typer==0.26.8
+typing_extensions==4.16.0
