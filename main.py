@@ -1,11 +1,11 @@
 import typer 
 from rich import print
-from typing import TypedDict
+from typing import TypedDict, Optional
 
 class UserData(TypedDict) : 
 	name : str
 	age : int
-	items :  list[dict[str, str], dict[str, str]]
+	items :  list[dict[str, str]]
 	active : bool
 	affiliation : None
 
