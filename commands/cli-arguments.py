@@ -6,8 +6,8 @@ App : typer.Typer = typer.Typer(rich_markup_mode="rich", no_args_is_help=True)
 
 @App.command()
 def create(
-    user_name : Annotated[str | None, typer.Argument(help="Create a user")]
-    ) -> bool :
+    user_name : Annotated[str, typer.Argument(help="Create a user")]
+) -> bool :
     """
     [green]Create[/green] a user. 
     """
