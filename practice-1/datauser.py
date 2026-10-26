@@ -22,20 +22,15 @@ text : Console = Console()
 table : Table = Table()
 
 @App.command(help="initialize the script")
-def init( path : Annotated[Path, typer.Option("--path", "-p", help="csv file location", rich_help_panel="Required Option", prompt="Where do you want to locate the file?")]) -> None :
+def init() -> None :
     """
     [green]Initialze the app[/green]\n
     init --path|-p
     """
-    success_initialzing_msg : Style = Style(color="bright_white", bgcolor="spring_green3")
-    error_initialzing_msg : Style = Style(color="bright_white", bgcolor="bright_red")
-    if Path.exists(path) : 
-        with open(FILE_LOCATION + FILE_NAME, mode="w") as file : pass
-        text.print(":) The app initialized successfully!", style=success_initialzing_msg)
-    else : 
-        text.print(":( Oops something went wrong!", style=error_initialzing_msg)
-        text.print("Default path: {}".format(FILE_LOCATION + FILE_NAME))
-
+    success_msg : Style = Style(color="bright_white", bgcolor="green3")
+    if Path.exists(FILE_LOCATION + FILE_NAME) : return
+    with open(FILE_LOCATION + FILE_NAME, "w") as file : pass
+    text.print(":) The app initialized successfully", style=success_msg)
 
 
 @App.command(help="create a user")
@@ -46,13 +41,10 @@ def create(
     ],
 ) -> None : 
     user_id : int
-    if Path.exists(FILE_LOCATION + FILE_NAME) :
-        with open(FILE_LOCATION + FILE_NAME, mode="r") as file : 
-            user_id = sum(1 for i in file)
-    else : ...
+    with open(FILE_LOCATION + FILE_NAME) as file : 
+        user_id = sum(1 for i in file) + 1
 
-
-
+    
 if __name__ == "__main__" : App()
 
     
