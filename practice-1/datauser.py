@@ -33,7 +33,7 @@ def init() -> None :
         writer.writerow(["_ID", "USER NAME", "USER AGE", "WORKING?"])
     text.print(":) The app initialized successfully", style=success_msg)
 
-
+# create
 @App.command(help="create a user")
 def create(
     name : Annotated[str, typer.Argument(
@@ -60,6 +60,16 @@ def create(
 
     # rendering the users table
     text.print("The user {} has created successfully!".format(name), style="green3")
+
+# update
+@App.command(help="update a user")
+def update(
+    id : Annotated[int | None, typer.Option("--id", help="update a user data using his id")] = None,
+    name : Annotated[str | None, typer.Option("--name", "-n", help="user name", prompt="What's the new name for the user?")] = None,
+    age : Annotated[int | None, typer.Option("--age", "-a", help="user age", prompt="Age?")] = None,
+    is_work : Annotated[int | False, typer.Option("--working", "-w", help="is the user working?")] = False
+) -> None : ...
+
 
 # script exceptions 
 class InitializingException(Exception) :
