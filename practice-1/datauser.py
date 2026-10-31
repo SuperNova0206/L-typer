@@ -64,12 +64,12 @@ def create(
 # update
 @App.command(help="update a user")
 def update(
+    param : typer.CallbackParam,
     id : Annotated[int | None, typer.Option("--id", help="update a user data using his id")] = None,
     name : Annotated[str | None, typer.Option("--name", "-n", help="user name", prompt="What's the new name for the user?")] = None,
     age : Annotated[int | None, typer.Option("--age", "-a", help="user age", prompt="Age?")] = None,
-    is_work : Annotated[int | False, typer.Option("--working", "-w", help="is the user working?")] = False
+    is_work : Annotated[bool, typer.Option("--working", "-w", help="is the user working?")] = False
 ) -> None : ...
-
 
 # script exceptions 
 class InitializingException(Exception) :
