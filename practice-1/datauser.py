@@ -1,7 +1,6 @@
 from typing import Annotated
 import typer, csv, os
 from rich.console import Console
-from rich.table import Table
 from rich.style import Style
 from  pathlib import Path
 
@@ -58,18 +57,30 @@ def create(
         writer  = csv.writer(csvfile)
         writer.writerow([user_id, name, age, is_work])
 
-    # rendering the users table
+    # sucess message
     text.print("The user {} has created successfully!".format(name), style="green3")
 
 # update
 @App.command(help="update a user")
 def update(
-    param : typer.CallbackParam,
-    id : Annotated[int | None, typer.Option("--id", help="update a user data using his id")] = None,
-    name : Annotated[str | None, typer.Option("--name", "-n", help="user name", prompt="What's the new name for the user?")] = None,
-    age : Annotated[int | None, typer.Option("--age", "-a", help="user age", prompt="Age?")] = None,
+    id : Annotated[int, typer.Option("--id", help="update a user data using his id", rich_help_panel="Required option")],
+    name : Annotated[str | None, typer.Option(help="user name", prompt="What's the new name for the user?")] = None,
+    age : Annotated[int | None, typer.Option(help="user age", prompt="Age?")] = None,
     is_work : Annotated[bool, typer.Option("--working", "-w", help="is the user working?")] = False
-) -> None : ...
+) -> None : 
+    
+    # getting a user data by his id
+    with open(FILE_LOCATION + FILE_NAME, mode="r", newline="") as csvfile :
+        OriginalReader = csv.DictReader(csvfile)
+        UpdatedData  = {}
+        for value in OriginalReader :
+            if int(value['_ID']) == id :
+                value["USER NAME"] = name if name != None else value["USER NAME"]
+                value["USER AGE"] = age if age != None else value["USER AGE"]
+                value["WORKING?"] = is_work if value["WORKING?"] != is_work else value["WORKING?"]
+            UpdatedData.update({"_ID" : name, "USER NAME" : name, "USER AGE" : age, "WORKING?" : is_work})
+        
+                
 
 # script exceptions 
 class InitializingException(Exception) :
