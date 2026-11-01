@@ -68,19 +68,14 @@ def update(
     age : Annotated[int | None, typer.Option(help="user age", prompt="Age?")] = None,
     is_work : Annotated[bool, typer.Option("--working", "-w", help="is the user working?")] = False
 ) -> None : 
-    
-    # getting a user data by his id
-    with open(FILE_LOCATION + FILE_NAME, mode="r", newline="") as csvfile :
-        OriginalReader = csv.DictReader(csvfile)
-        UpdatedData  = {}
-        for value in OriginalReader :
-            if int(value['_ID']) == id :
-                value["USER NAME"] = name if name != None else value["USER NAME"]
-                value["USER AGE"] = age if age != None else value["USER AGE"]
-                value["WORKING?"] = is_work if value["WORKING?"] != is_work else value["WORKING?"]
-            UpdatedData.update({"_ID" : name, "USER NAME" : name, "USER AGE" : age, "WORKING?" : is_work})
-        
-                
+
+    # read and update the user data by his id
+    with open(FILE_LOCATION + FILE_NAME, mode="r", newline="") as original, open("copy.csv", mode="w", newline="") as new : 
+        reader = csv.reader(original)
+        print(next(reader))
+
+
+       
 
 # script exceptions 
 class InitializingException(Exception) :
