@@ -71,26 +71,40 @@ def update(
 ) -> None : 
 
     header : list
-    UpdateData = []
+    UpdateData : list
 
     # read and change data's value
     with open(FILE_LOCATION + FILE_NAME, mode="r", newline="") as csvfile :
         header = csv.DictReader(csvfile).fieldnames
         data = csv.reader(csvfile)
-        for item in data :
-            if id == int(item[0]) :
-                UpdateData.append([id, name, age, False if is_working.lower() == "n" or is_working.lower() == "no" else True])
-            UpdateData.append([item[0], item[1], item[2], item[3]])
+        UpdateData = [item for item in data]
 
-        csvfile.close()
+    # changing
+    for item in UpdateData : 
+        index : int
+        if id == int(item[0]) : 
+            index = UpdateData.index(item)
+            UpdateData[index] = [id, name, age, False if is_working.lower() == "n" or is_working.lower() == "no" else True]
 
 
+    if confirmation.lower() == "yes" or confirmation.lower() == "y" : 
+        # updating
+        with open(FILE_LOCATION + FILE_NAME, mode="w", newline="") as file : 
+            writer = csv.writer(file)
+            writer.writerow(header)
+            for item in UpdateData : 
+                writer.writerow(item)
+            file.close()
+        text.print("The user {} updated successfully!".format(id), style="green3")
+        return
+    text.print("Operation canceled!", style="red3")
 
+# delete
+@App.command(help="delete a user")
+def delete(
+    id : Annotated[int, typer.Option(help="user id", rich_help_panel="Required option")]
+) -> None : ...
     
-
-
-        
-
 # script exceptions 
 class InitializingException(Exception) :
     pass
