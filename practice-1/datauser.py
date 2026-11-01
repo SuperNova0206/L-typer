@@ -63,17 +63,12 @@ def create(
 # update
 @App.command(help="update a user")
 def update(
-    id : Annotated[int, typer.Option("--id", help="update a user data using his id", rich_help_panel="Required option")],
-    name : Annotated[str | None, typer.Option(help="user name", prompt="What's the new name for the user?")] = None,
-    age : Annotated[int | None, typer.Option(help="user age", prompt="Age?")] = None,
-    is_work : Annotated[bool, typer.Option("--working", "-w", help="is the user working?")] = False
-) -> None : 
-
-    # read and update the user data by his id
-    with open(FILE_LOCATION + FILE_NAME, mode="r", newline="") as original, open("copy.csv", mode="w", newline="") as new : 
-        reader = csv.reader(original)
-        print(next(reader))
-
+    id : Annotated[int, typer.Option(help="user id", prompt=">>> user id: ", rich_help_panel="Required Option")],
+    name : Annotated[str | None, typer.Option(help="user name", prompt=">>> User name: ")] = None,
+    age : Annotated[str | None, typer.Option(help="user age", prompt=">>> User age: ")] = None,
+    is_working : Annotated[str, typer.Option(help="working?", prompt=">>> Is he working Y/N?: ")] = "n",
+    confirmation : Annotated[bool, typer.Option(help="user confirmation", prompt=">>> Do you want to update the user?: ")] = "n"
+) -> None : ...
 
        
 
