@@ -29,7 +29,7 @@ def init() -> None :
     if Path.exists(FILE_LOCATION + FILE_NAME) : return
     with open(FILE_LOCATION + FILE_NAME, mode="w", newline="") as file : 
         writer = csv.writer(file)
-        writer.writerow(["_ID", "USER NAME", "USER AGE", "WORKING?"])
+        writer.writerow(["_ID", "USER NAME", "USER AGE", "IS WORKING"])
     text.print(":) The app initialized successfully", style=success_msg)
 
 # create
@@ -63,14 +63,33 @@ def create(
 # update
 @App.command(help="update a user")
 def update(
-    id : Annotated[int, typer.Option(help="user id", prompt=">>> user id: ", rich_help_panel="Required Option")],
-    name : Annotated[str | None, typer.Option(help="user name", prompt=">>> User name: ")] = None,
-    age : Annotated[str | None, typer.Option(help="user age", prompt=">>> User age: ")] = None,
-    is_working : Annotated[str, typer.Option(help="working?", prompt=">>> Is he working Y/N?: ")] = "n",
-    confirmation : Annotated[bool, typer.Option(help="user confirmation", prompt=">>> Do you want to update the user?: ")] = "n"
-) -> None : ...
+    id : Annotated[int, typer.Option(help="user id", prompt=">>> user id ", rich_help_panel="Required Option")],
+    name : Annotated[str | None, typer.Option(help="user name", prompt=">>> User name ")] = None,
+    age : Annotated[str | None, typer.Option(help="user age", prompt=">>> User age ")] = None,
+    is_working : Annotated[str | None, typer.Option(help="working?", prompt=">>> Is he working Y/N? ")] = "n",
+    confirmation : Annotated[str | None, typer.Option(help="user confirmation", prompt=">>> Do you want to update the user Y/N? ")] = "n"
+) -> None : 
 
-       
+    header : list
+    UpdateData = []
+
+    # read and change data's value
+    with open(FILE_LOCATION + FILE_NAME, mode="r", newline="") as csvfile :
+        header = csv.DictReader(csvfile).fieldnames
+        data = csv.reader(csvfile)
+        for item in data :
+            if id == int(item[0]) :
+                UpdateData.append([id, name, age, False if is_working.lower() == "n" or is_working.lower() == "no" else True])
+            UpdateData.append([item[0], item[1], item[2], item[3]])
+
+        csvfile.close()
+
+
+
+    
+
+
+        
 
 # script exceptions 
 class InitializingException(Exception) :

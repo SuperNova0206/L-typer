@@ -1,4 +1,5 @@
-_ID,USER NAME,USER AGE,WORKING?
+_ID,USER NAME,USER AGE,IS WORKING
 1,Youssef Konich,22,True
-2,Ilfa,21,True
-3,Abul,21,False
+2,User test2,24,False
+3,User test3,57,False
+4,User test3,57,False
