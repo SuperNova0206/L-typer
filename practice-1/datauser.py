@@ -2,6 +2,7 @@ from typing import Annotated
 import typer, csv, os
 from rich.console import Console
 from rich.style import Style
+from rich.table import Table
 from  pathlib import Path
 
 # CONSTANTS
@@ -17,7 +18,8 @@ App : typer.Typer = typer.Typer(
 )
 
 # styling
-text : Console = Console()
+console : Console = Console()
+table : Table = Table(title="Users data")
 
 @App.command(help="initialize the script")
 def init() -> None :
@@ -30,7 +32,7 @@ def init() -> None :
     with open(FILE_LOCATION + FILE_NAME, mode="w", newline="") as file : 
         writer = csv.writer(file)
         writer.writerow(["_ID", "USER NAME", "USER AGE", "IS WORKING"])
-    text.print(":) The app initialized successfully", style=success_msg)
+    console.print(":) The app initialized successfully", style=success_msg)
 
 # create
 @App.command(help="create a user")
@@ -58,7 +60,7 @@ def create(
         writer.writerow([user_id, name, age, is_work])
 
     # sucess message
-    text.print("The user {} has created successfully!".format(name), style="green3")
+    console.print("The user {} has created successfully!".format(name), style="green3")
 
 # update
 @App.command(help="update a user")
@@ -95,16 +97,66 @@ def update(
             for item in UpdateData : 
                 writer.writerow(item)
             file.close()
-        text.print("The user {} updated successfully!".format(id), style="green3")
+        console.print("The user {} updated successfully!".format(id), style="green3")
         return
-    text.print("Operation canceled!", style="red3")
+    console.print("Operation canceled!", style="red3")
 
 # delete
 @App.command(help="delete a user")
 def delete(
-    id : Annotated[int, typer.Option(help="user id", rich_help_panel="Required option")]
-) -> None : ...
+    id : Annotated[int, typer.Option(help="user id", rich_help_panel="Required option")],
+    confirmation : Annotated[str, typer.Option(help="confirmation for deleting the user", prompt="Do you want to delete that user [Y/N]? ")] = "n"
+) -> None : 
+    header : list
+    updatedData : list
+
+    # reading 
+    with open(FILE_LOCATION + FILE_NAME, mode="r", newline="") as csvfile :
+        header = csv.DictReader(csvfile).fieldnames
+        data = csv.reader(csvfile)
+        updatedData = [item for item in data]
+
+    # deleting the user
+    with open(FILE_LOCATION  + FILE_NAME, mode="w", newline="") as csvfile :
+        for item in updatedData : 
+            if id == int(item[0]) :
+                index = updatedData.index(item)
+                updatedData.pop(index)
+
+    # rewriting the data
+    if confirmation.lower() == "y" or confirmation.lower() == "yes" : 
+        with open(FILE_LOCATION + FILE_NAME, mode="w", newline="") as file : 
+                    writer = csv.writer(file)
+                    writer.writerow(header)
+                    for item in updatedData : 
+                        writer.writerow(item)
+                    file.close()
+        console.print("The user {} deleted successfully!".format(id), style="green3")
+        return
+    console.print("Operation canceled!", style="red3")
+
+@App.command(help="read the data")
+def read() -> None :
+    header : list
+    data : list 
+
+    # reading
+    with open(FILE_LOCATION + FILE_NAME, mode="r", newline="") as csvfile : 
+        header = csv.DictReader(csvfile).fieldnames
+        reader = csv.reader(csvfile)
+        data = [item for item in reader]
+
+    # table (header)
+    for th in header :
+        table.add_column(th, justify="left")
+
+    # table (body)
+    for item in data :
+        table.add_row(*item)
+
+    console.print(table)
     
+
 # script exceptions 
 class InitializingException(Exception) :
     pass
