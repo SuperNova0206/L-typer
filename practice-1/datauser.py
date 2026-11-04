@@ -1,5 +1,5 @@
 from typing import Annotated
-import typer, csv, os
+import typer, csv
 from rich.console import Console
 from rich.style import Style
 from rich.table import Table
